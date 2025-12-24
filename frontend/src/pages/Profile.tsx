@@ -6,10 +6,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
-  const handleCancel = () => {
-    setIsEditing(false);
-    setAvatarPreview(null); // Revert preview on cancel
-};
+
 
   const handleSave = () => {
     setLoading(true);
