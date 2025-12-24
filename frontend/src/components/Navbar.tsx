@@ -7,7 +7,7 @@ const Navbar = () => {
         {name: "Dashboard", link: "#", icon: <LayoutDashboard className="text-green-500"/>, num: 1},
         {name: "Templates", link: "#", icon: <Paperclip className="text-green-500"/>, num: 2},
         {name: "Articles", link: "#", icon: <Newspaper className="text-green-500"/>, num: 3},
-        {name: "Account", link: "#", icon: <User className="text-green-500"/>, num: 4},
+        {name: "Profile", link: "#", icon: <User className="text-green-500"/>, num: 4},
     ]
     const [menu,setMenu] = useState(false);
     const handleMenu = () => {
