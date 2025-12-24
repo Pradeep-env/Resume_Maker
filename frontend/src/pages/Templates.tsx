@@ -21,7 +21,7 @@ const Templates = () => {
            <div className="h-full min-w-[250px] bg-black flex-shrink-0 rounded-md"></div>
           
        </div>
-        <h1 className="w-[80%] h-fit flex items-center justify-evenly text-xl font-medium mx-auto lg:text-3xl lg:w-[50%] xl:w-[50%] text-center">Pick Your Template</h1>
+        <h1 className="w-[80%] h-fit flex items-center justify-evenly text-xl font-medium mx-auto lg:text-3xl lg:w-[50%] xl:w-[50%] text-center">Search any Template</h1>
         <div className="w-full lg:w-[50%] h-[5vh] mx-auto mt-3 flex items-center justify-between font-bold">
             <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 1? "bg-blue-900 text-white": ""} cursor-pointer`} onClick={() => changeItem(1)}>Resume</p>
             <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 2? "bg-blue-900 text-white": ""} cursor-pointer`} onClick={() => changeItem(2)}>Letter</p>
