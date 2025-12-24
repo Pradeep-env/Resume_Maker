@@ -1,4 +1,4 @@
-import { Mail, PanelLeft, File, ChevronDown } from "lucide-react"
+import { Mail, PanelLeft, File} from "lucide-react"
 
 const Dashboard = () => {
   return (
