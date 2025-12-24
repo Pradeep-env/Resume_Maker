@@ -2,15 +2,7 @@ import { useState } from "react"
 
 const Templates = () => {
     const [item, Sitem] = useState(1);
-    const [holder, setHolder] = useState(0);
-    setInterval(() => {
-        if (holder === items.length - 1) {
-            setHolder(0)
-        } else {
-            setHolder(holder + 1)
-        }
-    }, 5000);
-    
+   
     const changeItem = (x: number) => {
         Sitem(x)
     }
@@ -30,13 +22,13 @@ const Templates = () => {
           
        </div>
         <h1 className="w-[80%] h-fit flex items-center justify-evenly text-xl font-medium mx-auto lg:text-3xl lg:w-[50%] xl:w-[50%] text-center">Pick Your Template</h1>
-        <div className="w-full h-[5vh] mx-auto mt-3 flex items-center justify-between font-bold">
-            <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 1? "bg-blue-900 text-white": ""}`} onClick={() => changeItem(1)}>Resume</p>
-            <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 2? "bg-blue-900 text-white": ""}`} onClick={() => changeItem(2)}>Letter</p>
-            <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 3? "bg-blue-900 text-white": ""}`} onClick={() => changeItem(3)}>Email</p>
+        <div className="w-full lg:w-[50%] h-[5vh] mx-auto mt-3 flex items-center justify-between font-bold">
+            <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 1? "bg-blue-900 text-white": ""} cursor-pointer`} onClick={() => changeItem(1)}>Resume</p>
+            <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 2? "bg-blue-900 text-white": ""} cursor-pointer`} onClick={() => changeItem(2)}>Letter</p>
+            <p className={`w-fit h-fit p-1 border-2 border-blue-900 rounded-xl text-blue-900 ${item === 3? "bg-blue-900 text-white": ""} cursor-pointer`} onClick={() => changeItem(3)}>Email</p>
 
         </div>
-        <input type="text" className="w-full h-[5vh] border rounded-xl mx-auto mt-3" placeholder={items[Math.floor(Math.random() * items.length)]}/>
+        <input type="text" className="lg:w-[50%] w-full h-[5vh] border rounded-xl mx-auto mt-3 mb-10 block" placeholder={items[Math.floor(Math.random() * items.length)]}/>
     </div>
   )
 }
