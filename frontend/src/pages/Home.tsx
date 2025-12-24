@@ -2,6 +2,7 @@
 import Navbar from "../components/Navbar"
 import Dashboard from "./Dashboard"
 import Templates from "./Templates"
+import Articles from "./Articles"
 import { hotStore } from "../store/hot"
 const Home = () => {
   const {dash} = hotStore()
@@ -10,6 +11,7 @@ const Home = () => {
       <Navbar/>
       {dash===1 && <Dashboard/>}
       {dash===2 && <Templates/>}
+      {dash===3 && <Articles/>}
       
     </div>
   )
