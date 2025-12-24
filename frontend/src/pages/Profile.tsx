@@ -4,6 +4,12 @@ import { useState } from "react"
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setAvatarPreview(null); // Revert preview on cancel
+};
 
   const handleSave = () => {
     setLoading(true);
@@ -33,18 +39,48 @@ const Profile = () => {
                 </button>
             </div>
 
-            <div className="relative group">
-              <div className={`h-32 w-32 rounded-full border-2 p-1 transition-all duration-500 ${isEditing ? 'border-blue-500 scale-110' : 'border-dashed border-white/20'}`}>
-                <div className="h-full w-full rounded-full bg-slate-800 border-2 border-white/10 overflow-hidden">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Pradeep" alt="Profile" className="h-full w-full object-cover" />
-                </div>
-              </div>
-              {isEditing && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full cursor-pointer backdrop-blur-[2px] animate-in fade-in duration-300">
-                    <Camera size={24} className="text-white" />
-                </div>
-              )}
-            </div>
+            {/* Avatar with Functional Upload */}
+<div className="relative group">
+  <label 
+    className={`relative block h-32 w-32 rounded-full border-2 p-1 transition-all duration-500 
+      ${isEditing 
+        ? 'border-blue-500 scale-110 cursor-pointer hover:border-blue-400' 
+        : 'border-dashed border-white/20'}`}
+  >
+    <div className="h-full w-full rounded-full bg-slate-800 border-2 border-white/10 overflow-hidden relative">
+      <img 
+        
+        src={avatarPreview || "https://api.dicebear.com/7.x/avataaars/svg?seed=Pradeep"} 
+        alt="Profile" 
+        className="h-full w-full object-cover transition-opacity duration-300" 
+      />
+      
+      {isEditing && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300">
+            <Camera size={24} className="text-white mb-1" />
+            <span className="text-[8px] font-bold text-white uppercase">Change</span>
+            
+            <input 
+              type="file" 
+              className="hidden" 
+              accept="image/*" 
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    // Create a temporary local URL for the preview
+                    const objectUrl = URL.createObjectURL(file);
+                    setAvatarPreview(objectUrl);
+                    
+                    // Cleanup memory when component unmounts
+                    return () => URL.revokeObjectURL(objectUrl);
+                }
+              }}
+            />
+        </div>
+      )}
+    </div>
+  </label>
+</div>
 
             <div className="w-full space-y-4">
               {[
