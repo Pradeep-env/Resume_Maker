@@ -1,12 +1,13 @@
 
 import './App.css'
 import Home from './pages/Home'
+import Land from './open/Land'
 function App() {
   
 
   return (
     <div className='body lg:px-[5rem]'>
-     <Home/>
+     <Land/>
     </div>
   )
 }
