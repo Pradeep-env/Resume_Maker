@@ -8,7 +8,7 @@ import { hotStore } from "../store/hot"
 const Home = () => {
   const {dash} = hotStore()
   return (
-    <div className="w-[100%] h-[100%] bg-white rounded-xl scrollbar">
+    <div className="w-[100%] h-[100%] rounded-xl scrollbar">
       <Navbar/>
       {dash===1 && <Dashboard/>}
       {dash===2 && <Templates/>}

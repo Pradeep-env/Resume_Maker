@@ -1,6 +1,6 @@
 import { MenuIcon, Newspaper, User, Paperclip,Tag, X, LogIn, Zap } from "lucide-react"
 import { useState } from "react"
-import { hotStore } from "../store/hot"
+import { demoHot } from "../store/hot"
 
 const Navbar = () => {
     const userOpt = [
@@ -12,7 +12,7 @@ const Navbar = () => {
     ]
     
     const [menu, setMenu] = useState(false);
-    const { setDash, dash } = hotStore();
+    const { setDash, dash } = demoHot();
 
     return (
         <>

@@ -1,6 +1,5 @@
 
 import './App.css'
-import Home from './pages/Home'
 import Land from './open/Land'
 function App() {
   

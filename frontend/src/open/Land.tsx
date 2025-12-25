@@ -1,10 +1,24 @@
 
-import Navbar from "./Navbar"
+import Navbar from "./Navbar" 
+import { demoHot } from "../store/hot"
+import Articles from "./Articles"
+import Templates from "./Templates"
+import PricingPage from "./Pricing"
+import AuthPage from "./Auth"
 const Land = () => {
+  const {dash} = demoHot()
   return (
-    <div className="w-[100%] h-[100%] bg-white rounded-xl scrollbar">
-      <Navbar/>
-    </div>
+    <div className="w-full h-full  overflow-y-auto overflow-x-hidden scrollbar">
+  <Navbar />
+  
+  {/* This wrapper ensures the children can be as tall as they need to be */}
+  
+    {dash === 1 && <Templates />}
+    {dash === 2 && <Articles />}
+    {dash === 3 && <PricingPage />}
+    {dash === 4 && <AuthPage />}
+  
+</div>
   )
 }
 

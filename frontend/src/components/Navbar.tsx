@@ -17,7 +17,7 @@ const Navbar = () => {
         <>
             {/* BACKDROP: Lower z-index than Toggle but higher than Page Content */}
             <div 
-                className={`fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[80] transition-opacity duration-300 lg:hidden ${menu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                className={`fixed inset-0 bg-[#8f96a3] backdrop-blur-[2px] z-[80] transition-opacity duration-300 lg:hidden ${menu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 onClick={() => setMenu(false)}
             />
 
