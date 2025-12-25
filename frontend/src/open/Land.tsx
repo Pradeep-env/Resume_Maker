@@ -5,6 +5,7 @@ import Articles from "./Articles"
 import Templates from "./Templates"
 import PricingPage from "./Pricing"
 import AuthPage from "./Auth"
+import Hero from "./Hero"
 const Land = () => {
   const {dash} = demoHot()
   return (
@@ -12,11 +13,12 @@ const Land = () => {
   <Navbar />
   
   {/* This wrapper ensures the children can be as tall as they need to be */}
-  
+     {dash === 0 && <Hero />}
     {dash === 1 && <Templates />}
     {dash === 2 && <Articles />}
     {dash === 3 && <PricingPage />}
     {dash === 4 && <AuthPage />}
+   
   
 </div>
   )
