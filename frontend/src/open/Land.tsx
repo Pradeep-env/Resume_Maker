@@ -6,6 +6,7 @@ import Templates from "./Templates"
 import PricingPage from "./Pricing"
 import AuthPage from "./Auth"
 import Hero from "./Hero"
+import ResumeBuilder from "./ResumeBuilder"
 const Land = () => {
   const {dash} = demoHot()
   return (
@@ -18,6 +19,7 @@ const Land = () => {
     {dash === 2 && <Articles />}
     {dash === 3 && <PricingPage />}
     {dash === 4 && <AuthPage />}
+    {dash === 5 && <ResumeBuilder />}
    
   
 </div>
