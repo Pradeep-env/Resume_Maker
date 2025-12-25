@@ -1,97 +1,84 @@
 import os
-import logging
-from logging.handlers import RotatingFileHandler
-
 from flask import Flask, request
 from flask_cors import CORS
 from dotenv import load_dotenv
+import logging
+from logging.handlers import RotatingFileHandler
 
 from config import Config
 from extension import db, jwt
 
-# --------------------------------------------------
-# Load environment variables
-# --------------------------------------------------
+#Blueprints
+from routes.auth import auth_bp
+
 load_dotenv()
 
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    
+    # Load config
     app.config.from_object(config_class)
 
-    # --------------------------------------------------
-    # CORS (HEADER-BASED JWT, NO COOKIES)
-    # --------------------------------------------------
+    # CORS setup for Render cross-domain cookie auth
     CORS(
         app,
-        origins=[os.getenv("TARGET")],
+        supports_credentials=True,
+        origins=[os.getenv("TARGET")],    # Frontend origin
         allow_headers=["Content-Type", "Authorization"],
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        supports_credentials=False
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
     )
 
-    # --------------------------------------------------
-    # Logging setup (cloud-safe)
-    # --------------------------------------------------
-    log_dir = os.path.join(os.getcwd(), "logs")
-    os.makedirs(log_dir, exist_ok=True)
-
+    # Logging setup
+    # ─── Logging Setup START ───────────────────────────────────────
     class RequestIPFilter(logging.Filter):
-        def filter(self, record):
-            try:
-                record.remote_addr = request.remote_addr
-            except RuntimeError:
-                record.remote_addr = "-"
-            return True
+      def filter(self, record):
+        try:
+            from flask import request
+            record.remote_addr = request.remote_addr
+        except RuntimeError:
+            record.remote_addr = "-"
+        return True
 
     formatter = logging.Formatter(
-        "%(remote_addr)s | %(asctime)s | %(levelname)s | %(message)s"
+     "%(remote_addr)s | %(asctime)s | %(levelname)s | %(message)s"
     )
 
     handler = RotatingFileHandler(
-        os.path.join(log_dir, "app.log"),
-        maxBytes=5 * 1024 * 1024,
-        backupCount=5
+     "/home/pradeep/Documents/Resume_Maker/backend/logs/app.log",
+     maxBytes=5 * 1024 * 1024,
+     backupCount=5
     )
+
     handler.setLevel(logging.ERROR)
     handler.setFormatter(formatter)
     handler.addFilter(RequestIPFilter())
 
     app.logger.addHandler(handler)
     app.logger.setLevel(logging.ERROR)
+# ─── Logging Setup END ─────────────────────────────────────────
 
-    # --------------------------------------------------
-    # Initialize extensions
-    # --------------------------------------------------
+    # Initialize extension objects
     db.init_app(app)
     jwt.init_app(app)
 
-    # --------------------------------------------------
-    # Register blueprints
-    # --------------------------------------------------
-    from auth.routes import auth_bp
-    app.register_blueprint(auth_bp)
-
-    # --------------------------------------------------
-    # TEMP: create tables (DEV ONLY)
-    # --------------------------------------------------
+    # Auto-create tables
     with app.app_context():
         db.create_all()
 
-    # --------------------------------------------------
-    # Preflight handling
-    # --------------------------------------------------
+
+    # Fix for CORS preflight rejection
     @app.before_request
     def handle_preflight():
         if request.method == "OPTIONS":
             return "", 200
 
+    #Register blueprints
+    app.register_blueprint(auth_bp)
     return app
 
 
-# --------------------------------------------------
-# Run server
-# --------------------------------------------------
+# ******** LOCAL DEVELOPMENT ONLY ********
 if __name__ == "__main__":
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", 5000))
