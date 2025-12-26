@@ -24,7 +24,8 @@ def create_app(config_class=Config):
     CORS(
      app,
      supports_credentials=True,
-     origins=[os.getenv("TARGET")],
+    # origins=[os.getenv("TARGET")],
+     origins = '*',
      allow_headers=["Content-Type", "Authorization", "X-CSRF-TOKEN"],
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
    )
