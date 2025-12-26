@@ -22,12 +22,12 @@ def create_app(config_class=Config):
 
     # CORS setup for Render cross-domain cookie auth
     CORS(
-        app,
-        supports_credentials=True,
-        origins=[os.getenv("TARGET")],    # Frontend origin
-        allow_headers=["Content-Type", "Authorization"],
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
-    )
+     app,
+     supports_credentials=True,
+     origins=[os.getenv("TARGET")],
+     allow_headers=["Content-Type", "Authorization", "X-CSRF-TOKEN"],
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+   )
 
     # Logging setup
     # ─── Logging Setup START ───────────────────────────────────────
