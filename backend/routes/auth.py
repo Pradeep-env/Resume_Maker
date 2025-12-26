@@ -43,8 +43,7 @@ def signup():
   db.session.commit()
   return jsonify({"success": True, "msg": "account created successfully"}), 201
  except Exception as e:
-  traceback.print_exc()
-  current_app.logger.error(f"Failed: {e} | '/signup'")
+  current_app.logger.error(f"Failed: {e} | '/signup'", exc_info=True)
   return jsonify({"success": False, "msg": "something went wrong"}), 500
 
 
@@ -72,7 +71,7 @@ def login():
   set_access_cookies(response, access_token)
   return response
  except Exception as e:
-   current_app.logger.error(f"Failed: {e} | '/login'")
+   current_app.logger.error(f"Failed: {e} | '/signup'", exc_info=True)
    return jsonify({"success": False, "msg": "something went wrong"}), 500
 
 #login state API
@@ -102,7 +101,7 @@ def forgot():
    return jsonify({"success": False, "msg": "account not found"}), 400
   return jsonify({"success": True, "msg": "recovery email sent"}), 200
  except Exception as e:
-  current_app.logger.error(f"Failed: {e} | '/forgot'")
+  current_app.logger.error(f"Failed: {e} | '/signup'", exc_info=True)
   return jsonify({"success": False, "msg": "something went wrong"}), 500
 
 #logout API

@@ -32,28 +32,47 @@ def create_app(config_class=Config):
     # Logging setup
     # ─── Logging Setup START ───────────────────────────────────────
     class RequestIPFilter(logging.Filter):
-      def filter(self, record):
-        try:
-            from flask import request
-            record.remote_addr = request.remote_addr
-        except RuntimeError:
-            record.remote_addr = "-"
-        return True
+        def filter(self, record):
+            try:
+                # If behind Render's proxy, we want the REAL user IP
+                if request.headers.get('X-Forwarded-For'):
+                    record.remote_addr = request.headers.get('X-Forwarded-For').split(',')[0]
+                else:
+                    record.remote_addr = request.remote_addr
+            except RuntimeError:
+                record.remote_addr = "-"
+            return True
 
+    # 2. Define your custom Format
     formatter = logging.Formatter(
-     "%(remote_addr)s | %(asctime)s | %(levelname)s | %(message)s"
+        "%(remote_addr)s | %(asctime)s | %(levelname)s | %(message)s"
     )
 
-    handler = RotatingFileHandler(
-     "/home/pradeep/Documents/Resume_Maker/backend/logs/app.log",
-     maxBytes=5 * 1024 * 1024,
-     backupCount=5
-    )
+    # 3. Decide where to send logs based on the environment
+    if os.getenv("RENDER"):  # This variable is always 'true' on Render
+        # --- CLOUD LOGGING (Console) ---
+        handler = logging.StreamHandler(sys.stdout)
+    else:
+        # --- LOCAL LOGGING (File) ---
+        # Get the path relative to where server.py is located
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        log_dir = os.path.join(base_dir, "logs")
+        
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+            
+        handler = RotatingFileHandler(
+            os.path.join(log_dir, "app.log"),
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5
+        )
 
+    # 4. Attach the settings to the handler
     handler.setLevel(logging.ERROR)
     handler.setFormatter(formatter)
     handler.addFilter(RequestIPFilter())
 
+    # 5. Attach the handler to the Flask logger
     app.logger.addHandler(handler)
     app.logger.setLevel(logging.ERROR)
 # ─── Logging Setup END ─────────────────────────────────────────
