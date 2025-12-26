@@ -12,8 +12,8 @@ interface AuthState {
   setName: (v: string) => void;
   setEmail: (v: string) => void;
   setPassword: (v: string) => void;
-  loginUser: () => Promise<void>;
-  signupUser: () => Promise<void>;
+  loginUser: () => Promise<any>;
+  signupUser: () => Promise<any>;
   logout: () => void;
  
 }
@@ -53,17 +53,17 @@ const useAuth = create<AuthState>()(
            
             isAuthenticated: false
           });
-          return err.response.data;
+          return err.response?.data;
         }
       },
        checkAuth: async () => {
         try {
           const res = await apiStack.getUser(); // IMPORTANT
           set({ isAuthenticated: res.data.success });
-          return res.data;
+          return res;
         } catch (err: any) {
           set({ isAuthenticated: false });
-          return err.response.data;
+          return err.response;
         }
       },
     
@@ -84,7 +84,7 @@ const useAuth = create<AuthState>()(
            
             isAuthenticated: false
           });
-          return err.response.data;
+          return err.response?.data;
         }
       },
      logout: async () => {

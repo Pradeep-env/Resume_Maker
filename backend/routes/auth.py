@@ -6,6 +6,7 @@ from extension import db
 from utils.password import hash_password, verify_password
 from utils.id_gen import gen_id
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, get_jwt_identity, unset_access_cookies
+import traceback
 
 auth_bp=Blueprint('auth',__name__,url_prefix="/api/v1")
 
@@ -42,6 +43,7 @@ def signup():
   db.session.commit()
   return jsonify({"success": True, "msg": "account created successfully"}), 201
  except Exception as e:
+  traceback.print_exc()
   current_app.logger.error(f"Failed: {e} | '/signup'")
   return jsonify({"success": False, "msg": "something went wrong"}), 500
 
@@ -95,7 +97,7 @@ def forgot():
   if not valid_email(email):
    return jsonify({"success": False, "msg": "invalid email format"}), 400
 
-  user = Auth.query.filter_by(email=email, mobile=mobile).first()
+  user = Auth.query.filter_by(email=email).first()
   if not user:
    return jsonify({"success": False, "msg": "account not found"}), 400
   return jsonify({"success": True, "msg": "recovery email sent"}), 200

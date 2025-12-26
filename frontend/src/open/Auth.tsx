@@ -1,9 +1,35 @@
 import { useState } from "react";
 import { Mail, Lock, User,  Chrome as Google, Linkedin, ArrowRight } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+import useAuth from '../store/authStore'
+import {toast } from "react-toastify";
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-
+  const nav = useNavigate();
+  const {setName, setEmail, setPassword, loginUser, signupUser} = useAuth()
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (isLogin) {
+      const res = await loginUser(); 
+      if (res["success"]) {
+        nav("/dashboard");
+       
+      }
+      else{
+        toast(res["msg"])
+      }
+    } else {
+      const res = await signupUser(); 
+      if (res["success"]) {
+        toast(res["msg"])
+      }
+      else{
+        toast(res["msg"])
+      }
+    }
+  }
   return (
     <div className="flex min-h-screen w-full bg-[#050505] overflow-hidden">
       
@@ -57,13 +83,13 @@ const AuthPage = () => {
           </div>
 
           {/* Form Fields */}
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={(e) => handleSubmit(e)}>
             {!isLogin && (
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Full Name</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                  <input type="text" placeholder="John Doe" className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all" required/>
+                  <input type="text" placeholder="John Doe" onChange={(e) => setName(e.target.value)}  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all" required/>
                 </div>
               </div>
             )}
@@ -72,7 +98,7 @@ const AuthPage = () => {
               <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                <input type="email" placeholder="name@example.com" className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all" required/>
+                <input type="email" placeholder="name@example.com"  onChange={(e) => setEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all" required/>
               </div>
             </div>
 
@@ -83,7 +109,7 @@ const AuthPage = () => {
               </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                <input type="password" placeholder="••••••••" className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all" required/>
+                <input type="password" placeholder="••••••••"  onChange={(e) => setPassword(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all" required/>
               </div>
             </div>
 
