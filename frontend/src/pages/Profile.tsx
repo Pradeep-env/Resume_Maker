@@ -1,7 +1,7 @@
 import { User, Mail, CalendarCheck, MapPin, LogOut, Camera, Zap, ArrowUpRight, Check, Pencil, X, ShieldCheck, Crown, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useProfileStore } from "../store/profileStore";
-
+import {toast} from "react-toastify"
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -9,16 +9,18 @@ const Profile = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const { 
     name, setName, email, city, setCity, image, 
-    plan, plan_info, plan_start, subscription, created, fetchProfile 
+    plan, plan_info, plan_start, subscription, created, fetchProfile, updateProfile,setImage 
   } = useProfileStore();
 
   useEffect(() => {
     fetchProfile();
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setLoading(true);
     // Simulate API call - you can swap this with your store.changeProfile()
+    const res = await updateProfile();
+    toast(res["msg"])
     setTimeout(() => {
       setLoading(false);
       setIsEditing(false);
@@ -36,7 +38,15 @@ const Profile = () => {
     return [];
   }
 };
-
+const getAvatarSrc = () => {
+  if (avatarPreview) return avatarPreview; // Local blob URL
+  if (image && image.trim().length > 0) {
+    // If it's a Base64 string, it should already have the 'data:image' prefix
+    return image; 
+  }
+  // Default fallback if everything else is empty
+  return `https://api.dicebear.com/7.x/initials/svg?seed=${name}`;
+};
   return (
     <div className="w-full h-full p-6 md:p-12 overflow-y-auto scroll-smooth bg-[#050505] text-slate-200">
       <div className="max-w-6xl mx-auto lg:flex lg:items-start lg:justify-center gap-8">
@@ -60,7 +70,7 @@ const Profile = () => {
               <label className={`relative block h-32 w-32 rounded-full border-2 p-1 transition-all duration-500 ${isEditing ? 'border-blue-500 scale-110 cursor-pointer hover:border-blue-400' : 'border-dashed border-white/20'}`}>
                 <div className="h-full w-full rounded-full bg-slate-800 border-2 border-white/10 overflow-hidden relative">
                   <img 
-                    src={avatarPreview || image || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`} 
+                    src={getAvatarSrc()} 
                     alt="Profile" 
                     className="h-full w-full object-cover transition-opacity duration-300" 
                   />
@@ -68,11 +78,28 @@ const Profile = () => {
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300 text-center">
                         <Camera size={24} className="text-white mb-1" />
                         <span className="text-[8px] font-bold text-white uppercase">Upload</span>
-                        <input type="file" className="hidden" accept="image/*" onChange={(e) => {
-                          if (e.target.files?.[0]) {
-                            setAvatarPreview(URL.createObjectURL(e.target.files[0]));
-                          }
-                        }} />
+                       <input 
+  type="file" 
+  className="hidden" 
+  accept="image/*" 
+  onChange={(e) => {
+    if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        
+        // 1. Update local UI preview (Temporary blob)
+        setAvatarPreview(URL.createObjectURL(file));
+        
+        // 2. Convert to Base64 and save to Zustand Store
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result as string;
+            // IMPORTANT: You must have a setImage function in your zustand store
+            setImage(base64); 
+        };
+        reader.readAsDataURL(file);
+    }
+  }}
+/>
                     </div>
                   )}
                 </div>
@@ -84,7 +111,7 @@ const Profile = () => {
                 { icon: <User size={18} />, value: name, label: "Full Name", action: setName },
                 { icon: <Mail size={18} />, value: email, label: "Email Address", action: null },
                 { icon: <MapPin size={18} />, value: city, label: "city", action: setCity },
-                { icon: <CalendarCheck size={18} />, value: created, label: "joined" },
+                { icon: <CalendarCheck size={18} />, value: created, label: "joined", action: null },
               ].map((field, idx) => (
                 <div key={idx} className="relative group/field">
                   <span className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${isEditing && field.action ? 'text-blue-400' : 'text-slate-500'}`}>

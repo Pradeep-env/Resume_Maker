@@ -24,6 +24,7 @@ def profile_edit():
   data=request.json
   name=data["name"]
   city=data["city"].strip()
+  image=data["image"]
 
   if len(name) < 3 or len(name) > 100:
    return jsonify({"success": False, "msg": "name should be 3 to 100 characters"}), 400
@@ -33,6 +34,7 @@ def profile_edit():
 
   user.name = name
   user.city = city
+  user.image = image
   db.session.commit()
   return jsonify({"success": True, "msg": "profile updated successfully"}), 201
  except Exception as e:

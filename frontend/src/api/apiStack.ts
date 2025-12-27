@@ -6,6 +6,7 @@ const apiStack = {
   logout: () => axiosClient.post("/logout"),
   register: (data: any) => axiosClient.post("/signup", data),
   profileinfo: () => axiosClient.get("/profile"),
+  profileupdate: (data: any) => axiosClient.post("/profile", data),
 };
 
 export default apiStack;

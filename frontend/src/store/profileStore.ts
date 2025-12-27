@@ -15,12 +15,14 @@ interface ProfileState {
   
 
   fetchProfile: () => Promise<void>;
+  updateProfile: () => Promise<any>;
   setName: (v: string) => void;
   setCity: (v: string) => void;
+  setImage: (v: string) => void;
  
 }
 
-export const useProfileStore = create<ProfileState>((set) => ({
+export const useProfileStore = create<ProfileState>((set, get) => ({
   name: " ",
   city: " ",
   email: " ",
@@ -35,6 +37,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   
   setName: (v) => set({ name: v }),
   setCity: (v) => set({ city: v }),
+  setImage: (v) => set({ image: v }),
 
   fetchProfile: async () => {
     try {
@@ -61,6 +64,14 @@ export const useProfileStore = create<ProfileState>((set) => ({
     }
   },
 
-  
+  updateProfile: async () => {
+    const { name, city, image } = get();
+    try {
+      const res = await apiStack.profileupdate({"name": name, "city": city, "image": image});
+      return res.data;
+    } catch (err: any) {
+      return err.response?.data;
+    }
+  },
 
 }));
