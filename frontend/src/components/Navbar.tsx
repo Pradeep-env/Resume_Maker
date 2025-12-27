@@ -37,7 +37,7 @@ const Navbar = () => {
                         <button
                             key={opt.name}
                             onClick={() => setDash(opt.num)}
-                            className={`flex items-center gap-2 text-sm font-medium transition-all relative py-2 ${dash === opt.num ? 'text-green-400' : 'text-slate-400 hover:text-white'}`}
+                            className={`flex items-center gap-2 text-sm font-medium transition-all relative py-2 cursor-pointer ${dash === opt.num ? 'text-green-400' : 'text-slate-400 hover:text-white'}`}
                         >
                             {opt.icon}
                             {opt.name}
