@@ -10,6 +10,7 @@ from extension import db, jwt
 
 #Blueprints
 from routes.auth import auth_bp
+from routes.profile import profile_bp
 
 load_dotenv()
 
@@ -95,6 +96,7 @@ def create_app(config_class=Config):
 
     #Register blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(profile_bp)
     return app
 
 

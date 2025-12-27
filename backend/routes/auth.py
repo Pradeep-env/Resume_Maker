@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 import json
 from utils.validators import valid_email, valid_pass
-from models import Auth
+from models import Auth, Profile
 from extension import db
 from utils.password import hash_password, verify_password
 from utils.id_gen import gen_id
@@ -39,7 +39,12 @@ def signup():
    password=hash_password(password)
   )
 
+  profile = Profile(
+  id=id,
+  plan='freetier01'
+  )
   db.session.add(user)
+  db.session.add(profile)
   db.session.commit()
   return jsonify({"success": True, "msg": "account created successfully"}), 201
  except Exception as e:

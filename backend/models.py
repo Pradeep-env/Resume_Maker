@@ -33,8 +33,8 @@ class Plans(db.Model):
 class Profile(db.Model):
     __tablename__ = "profile"
 
-    id = db.Column(db.String(15), db.ForeignKey('auth.id'), primary_key=True)
-    city = db.Column(db.String(15), default='Bengaluru, India')
+    id = db.Column(db.String(36), db.ForeignKey('auth.id'), primary_key=True)
+    city = db.Column(db.String(100), default='Bengaluru, India')
     image = db.Column(db.Text, nullable=True)
     plan = db.Column(db.String(10), db.ForeignKey('plans.id'), nullable=False)
     subscribed = db.Column(db.Boolean, default=True)
